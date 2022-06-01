@@ -1,5 +1,5 @@
 {
-  "name": "podia-visualizer",
+  "name": "podia-analytics",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
