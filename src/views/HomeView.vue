@@ -4,13 +4,18 @@ import { parse } from "papaparse";
 import type { IPurchase } from "@/interfaces/purchase";
 
 import {
+  doughnutSalesNumberConfig,
+  doughnutSalesRevenueConfig,
+} from "@/composables/useDoughnutChart";
+
+import {
   convertToPurchase,
   findProductsNames,
 } from "@/composables/usePurchaseHandler";
 import { buildChartBarsConfig } from "@/composables/useLineChart";
 
 import type { ChartData } from "chart.js";
-import { LineChart } from "vue-chart-3";
+import { LineChart, DoughnutChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
@@ -21,6 +26,8 @@ const targetedProducts = ref<Array<string>>([]);
 const displayMode = ref<"week" | "month">("week");
 
 const lineChartData = ref<ChartData>();
+const salesNumberDoughnutData = ref();
+const salesRevenueDoughnutData = ref();
 
 const allPurchases = ref<IPurchase[]>();
 
@@ -64,6 +71,16 @@ const updateTargetedProductsAction = (product: string) => {
     targetedProducts.value?.push(product);
   }
   renderLineBar();
+
+  salesNumberDoughnutData.value = doughnutSalesNumberConfig(
+    filteredProducts.value as IPurchase[]
+  );
+
+  salesRevenueDoughnutData.value = doughnutSalesRevenueConfig(
+    filteredProducts.value as IPurchase[]
+  );
+
+  console.log(salesNumberDoughnutData.value);
 };
 
 const renderLineBar = () => {
@@ -72,6 +89,10 @@ const renderLineBar = () => {
     displayMode.value
   );
   lineChartData.value = dataForBarChart;
+};
+
+const updateChartAction = () => {
+  renderLineBar();
 };
 </script>
 
@@ -115,19 +136,33 @@ const renderLineBar = () => {
           id="week"
           value="week"
           v-model="displayMode"
+          @change="updateChartAction"
         /><label for="week" class="mr-4">Week</label>
         <input
           type="radio"
           id="week"
           value="month"
           v-model="displayMode"
+          @change="updateChartAction"
         /><label for="month">Month</label>
       </div>
     </template>
 
-    <div class="my-6" v-if="displayTargetedProducts">
-      <h2 class="text-2xl">charts for "{{ displayTargetedProducts }}"</h2>
-      <LineChart :chartData="lineChartData" />
+    <div class="my-10" v-if="displayTargetedProducts">
+      <h2 class="text-3xl">charts for "{{ displayTargetedProducts }}"</h2>
+      <LineChart class="my-6" :chartData="lineChartData" />
+
+      <h2 class="text-3xl">Sales number : coupon vs no coupon</h2>
+      <DoughnutChart
+        class="my-6"
+        :chartData="salesNumberDoughnutData"
+      ></DoughnutChart>
+
+      <h2 class="text-3xl">Sales revenue : coupon vs no coupon</h2>
+      <DoughnutChart
+        class="my-6"
+        :chartData="salesRevenueDoughnutData"
+      ></DoughnutChart>
     </div>
   </div>
 </template>

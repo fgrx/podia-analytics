@@ -20,4 +20,4 @@ const findProductsNames = (purchases: IPurchase[]): Array<string> => {
   return productsList;
 };
 
-export { convertToPurchase, findProductsNames };
+export { convertToPurchase, findProductsNames, parsePurchaseFile };

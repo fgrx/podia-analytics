@@ -113,20 +113,22 @@ export function buildChartBarsConfig(
     datasets: [
       {
         label: "All Sales",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "#263abd",
+        borderColor: "#263abd",
+
         data: retrievePurchasesByMode(purchasesNumbers, "all").reverse(),
       },
       {
         label: "Sales with a coupon",
-        backgroundColor: "#7aeb34",
-        borderColor: "#7aeb34",
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
         data: retrievePurchasesByMode(purchasesNumbers, "coupon").reverse(),
       },
       {
         label: "Sales without coupon",
-        backgroundColor: "#263abd",
-        borderColor: "#263abd",
+
+        backgroundColor: "#7aeb34",
+        borderColor: "#7aeb34",
         data: retrievePurchasesByMode(purchasesNumbers, "nocoupon").reverse(),
       },
     ],
