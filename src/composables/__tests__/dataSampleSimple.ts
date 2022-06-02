@@ -23,14 +23,14 @@ const dataSample: IPurchase[] = [
       "Le contre-transfert : utiliser son ressenti pour aller plus loin dans l'accompagnement",
   },
   {
-    date: "2022-05-29 17:31:41",
+    date: "2022-05-28 17:31:41",
     coupon: "",
     revenue: " 249.00",
     summary:
       "Le contre-transfert : utiliser son ressenti pour aller plus loin dans l'accompagnement",
   },
   {
-    date: "2022-05-29 17:31:41",
+    date: "2022-05-27 17:31:41",
     coupon: "",
     revenue: " 249.00",
     summary:

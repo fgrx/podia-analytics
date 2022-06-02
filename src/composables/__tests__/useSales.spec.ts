@@ -7,25 +7,32 @@ import {
   salesNumberWithCoupon,
   salesRevenueWithCoupon,
 } from "@/composables/useSales";
+import type { IPeriod } from "@/interfaces/period";
+import dayjs from "dayjs";
+
+const period: IPeriod = {
+  start: dayjs("2022-05-26 "),
+  end: dayjs("2022-05-30"),
+};
 
 describe(">>>>> useSales composable", () => {
   it("should return all sales number", () => {
     const nbSalesWanted = 5;
-    expect(allSalesNumber(dataSample)).toBe(nbSalesWanted);
+    expect(allSalesNumber(dataSample, period)).toBe(nbSalesWanted);
   });
 
   it("should return all sales money", () => {
     const revenueWanted = 1245;
-    expect(salesRevenue(dataSample)).toBe(revenueWanted);
+    expect(salesRevenue(dataSample, period)).toBe(revenueWanted);
   });
 
   it("should render number of sales with coupon", () => {
     const salesWanted = 2;
-    expect(salesNumberWithCoupon(dataSample)).toBe(salesWanted);
+    expect(salesNumberWithCoupon(dataSample, period)).toBe(salesWanted);
   });
 
   it("should render revenue of sales with coupon", () => {
     const salesWanted = 498;
-    expect(salesRevenueWithCoupon(dataSample)).toBe(salesWanted);
+    expect(salesRevenueWithCoupon(dataSample, period)).toBe(salesWanted);
   });
 });

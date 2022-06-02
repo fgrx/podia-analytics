@@ -27,13 +27,17 @@ export function initializeData(
   dateEnd: Dayjs,
   periodMode: PeriodMode
 ): IinitializeWeeksData {
+  const numberOfPurchases = purchases.length;
+  const lastPurchase = purchases[numberOfPurchases - 1];
+  const lastDate = dayjs(lastPurchase.date);
+
   const labels: string[] = [];
   const purchasesNumbersList: IPurchaseNumber[] = [];
 
   let periodStart = dateEnd;
   let periodEnd = updatePeriod(periodStart, dateEnd, periodMode).dateEnd;
 
-  while (dateStart <= periodStart) {
+  while (dateStart <= periodStart && lastDate <= periodStart) {
     labels.push(dateLabel(periodStart, periodEnd, periodMode));
 
     const couponModes: CouponMode[] = ["all", "coupon", "nocoupon"];

@@ -34,7 +34,7 @@ const periodEnd = ref<string>(dayjs().format("YYYY-MM-DD"));
 const period = computed((): IPeriod => {
   return {
     start: dayjs(periodStart.value),
-    end: dayjs(periodEnd.value + " 23:59:59"),
+    end: dayjs(periodEnd.value).endOf("day"),
   };
 });
 
@@ -83,17 +83,7 @@ const updateTargetedProductsAction = (product: string) => {
   } else {
     targetedProducts.value?.push(product);
   }
-  renderLineBar();
-
-  salesNumberDoughnutData.value = doughnutSalesNumberConfig(
-    filteredProducts.value as IPurchase[]
-  );
-
-  salesRevenueDoughnutData.value = doughnutSalesRevenueConfig(
-    filteredProducts.value as IPurchase[]
-  );
-
-  console.log(salesNumberDoughnutData.value);
+  updateChartAction();
 };
 
 const renderLineBar = () => {
@@ -106,6 +96,16 @@ const renderLineBar = () => {
 
 const updateChartAction = () => {
   renderLineBar();
+
+  salesNumberDoughnutData.value = doughnutSalesNumberConfig(
+    filteredProducts.value as IPurchase[],
+    period.value
+  );
+
+  salesRevenueDoughnutData.value = doughnutSalesRevenueConfig(
+    filteredProducts.value as IPurchase[],
+    period.value
+  );
 };
 </script>
 
@@ -182,6 +182,7 @@ const updateChartAction = () => {
               type="text"
               class="border-solid border-2 px-4 py-2 rounded-md border-sky-500"
               v-model="periodStart"
+              @change="updateChartAction"
               placeholder="2022-01-01"
             />
             to
@@ -189,6 +190,7 @@ const updateChartAction = () => {
               type="text"
               class="border-solid border-2 px-4 py-2 rounded-md border-sky-500"
               v-model="periodEnd"
+              @change="updateChartAction"
               placeholder="2022-04-22"
             />
           </div>
