@@ -9,6 +9,7 @@ import {
   dateEnd,
 } from "@/composables/useDatesFunctions";
 import type { CouponMode, PeriodMode } from "@/interfaces/types";
+import type { IPeriod } from "@/interfaces/period";
 
 interface IPurchaseNumber {
   mode: CouponMode;
@@ -22,27 +23,25 @@ interface IinitializeWeeksData {
 
 export function initializeData(
   purchases: IPurchase[],
-  periodStart: Dayjs,
-  periodEnd: Dayjs,
-  displayMode: PeriodMode
+  dateStart: Dayjs,
+  dateEnd: Dayjs,
+  periodMode: PeriodMode
 ): IinitializeWeeksData {
-  const numberOfPurchases = purchases.length;
-  const lastPurchase = purchases[numberOfPurchases - 1];
-  const lastDate = dayjs(lastPurchase.date);
-
   const labels: string[] = [];
-
   const purchasesNumbersList: IPurchaseNumber[] = [];
 
-  while (lastDate <= periodEnd) {
-    labels.push(dateLabel(periodStart, periodEnd, displayMode));
+  let periodStart = dateEnd;
+  let periodEnd = updatePeriod(periodStart, dateEnd, periodMode).dateEnd;
+
+  while (dateStart <= periodStart) {
+    labels.push(dateLabel(periodStart, periodEnd, periodMode));
 
     const couponModes: CouponMode[] = ["all", "coupon", "nocoupon"];
 
     couponModes.forEach((mode) => {
       const nbPurchases: number = getPurchaseNumberByDate(
-        periodStart,
         periodEnd,
+        periodStart,
         purchases,
         mode
       );
@@ -50,7 +49,7 @@ export function initializeData(
       purchasesNumbersList.push({ mode, nbPurchases });
     });
 
-    const nextPeriod = updatePeriod(periodStart, periodEnd, displayMode);
+    const nextPeriod = updatePeriod(periodStart, periodEnd, periodMode);
     periodStart = nextPeriod.dateStart;
     periodEnd = nextPeriod.dateEnd;
   }
@@ -91,12 +90,13 @@ export function getPurchaseNumberByDate(
 
 export function buildChartBarsConfig(
   purchases: IPurchase[],
-  periodMode: PeriodMode
+  periodMode: PeriodMode,
+  period: IPeriod
 ): ChartData {
   const { labels, purchasesNumbers: purchasesNumbers } = initializeData(
     purchases,
-    dateStart(periodMode),
-    dateEnd(periodMode),
+    dateStart(periodMode, period.start.format("YYYY-MM-DD")),
+    dateEnd(periodMode, period.end.format("YYYY-MM-DD")),
     periodMode
   );
 

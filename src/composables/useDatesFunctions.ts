@@ -15,35 +15,35 @@ const lastDayOfYear = (date: string | Date) => dayjs(date).endOf("year");
 const startOfDay = (date: string | Date) => dayjs(date).startOf("day");
 const endOfDay = (date: string | Date) => dayjs(date).endOf("day");
 
-const dateStart = (periodMode: PeriodMode) => {
+const dateStart = (periodMode: PeriodMode, periodStart: string) => {
   switch (periodMode) {
     case "day":
-      return startOfDay(new Date());
+      return startOfDay(periodStart);
 
     case "month":
-      return firstDayOfMonth(new Date());
+      return firstDayOfMonth(periodStart);
 
     case "year":
-      return firstDayOfYear(new Date());
+      return firstDayOfYear(periodStart);
 
     default:
-      return firstDayOfTheWeek(new Date());
+      return firstDayOfTheWeek(periodStart);
   }
 };
 
-const dateEnd = (periodMode: PeriodMode) => {
+const dateEnd = (periodMode: PeriodMode, periodEnd: string) => {
   switch (periodMode) {
     case "day":
-      return endOfDay(new Date());
+      return endOfDay(periodEnd);
 
     case "month":
-      return lastDayOfMonth(new Date());
+      return lastDayOfMonth(periodEnd);
 
     case "year":
-      return lastDayOfYear(new Date());
+      return lastDayOfYear(periodEnd);
 
     default:
-      return lastDayOfTheWeek(new Date());
+      return lastDayOfTheWeek(periodEnd);
   }
 };
 
@@ -95,7 +95,7 @@ const dateLabel = (
       return dateStart.format("YYYY");
     default:
       return (
-        dateStart.format("DD/MM/YYYY") + " - " + dateEnd.format("DD/MM/YYYY")
+        dateEnd.format("DD/MM/YYYY") + " - " + dateStart.format("DD/MM/YYYY")
       );
   }
 };

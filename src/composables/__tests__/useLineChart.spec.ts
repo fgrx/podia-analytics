@@ -59,8 +59,20 @@ describe(">>>>>>> useChart composable", () => {
     expect(purchaseNumberWithCoupon).toBe(numberOfPurchasesWithCouponWanted);
   });
 
-  it("should return chart labels and numbers", () => {
+  it("should return chart labels", () => {
     const numberOfLabelsWanted = 3;
+
+    const results = initializeData(
+      dataSample,
+      dayjs("2022-05-09"),
+      dayjs("2022-05-29 23:59:59"),
+      "week"
+    );
+
+    expect(results.labels.length).toBe(numberOfLabelsWanted);
+  });
+
+  it("should return chart labels and numbers", () => {
     const purchasesWantedOnFirstElement = 12;
 
     const results = initializeData(
@@ -70,7 +82,6 @@ describe(">>>>>>> useChart composable", () => {
       "week"
     );
 
-    expect(results.labels.length).toBe(numberOfLabelsWanted);
     expect(results.purchasesNumbers[0].nbPurchases).toBe(
       purchasesWantedOnFirstElement
     );

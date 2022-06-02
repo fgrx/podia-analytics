@@ -18,6 +18,8 @@ import type { ChartData } from "chart.js";
 import { LineChart, DoughnutChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
 import type { PeriodMode } from "@/interfaces/types";
+import type { IPeriod } from "@/interfaces/period";
+import dayjs from "dayjs";
 
 Chart.register(...registerables);
 
@@ -26,8 +28,15 @@ const csvFile = ref<File>();
 const productsList = ref<Array<string>>();
 const targetedProducts = ref<Array<string>>([]);
 const periodMode = ref<PeriodMode>("week");
-const periodStart = ref<string>();
-const periodEnd = ref<string>();
+const periodStart = ref<string>("2019-01-01");
+const periodEnd = ref<string>(dayjs().format("YYYY-MM-DD"));
+
+const period = computed((): IPeriod => {
+  return {
+    start: dayjs(periodStart.value),
+    end: dayjs(periodEnd.value + " 23:59:59"),
+  };
+});
 
 const lineChartData = ref<ChartData>();
 const salesNumberDoughnutData = ref();
@@ -88,11 +97,11 @@ const updateTargetedProductsAction = (product: string) => {
 };
 
 const renderLineBar = () => {
-  const dataForBarChart = buildChartBarsConfig(
+  lineChartData.value = buildChartBarsConfig(
     filteredProducts.value as IPurchase[],
-    periodMode.value
+    periodMode.value,
+    period.value
   );
-  lineChartData.value = dataForBarChart;
 };
 
 const updateChartAction = () => {
