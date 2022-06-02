@@ -149,20 +149,29 @@ const updateChartAction = () => {
     </template>
 
     <div class="my-10" v-if="displayTargetedProducts">
-      <h2 class="text-3xl">charts for "{{ displayTargetedProducts }}"</h2>
+      <h2 class="text-3xl text-center">
+        charts for "{{ displayTargetedProducts }}"
+      </h2>
       <LineChart class="my-6" :chartData="lineChartData" />
 
-      <h2 class="text-3xl">Sales number : coupon vs no coupon</h2>
-      <DoughnutChart
-        class="my-6"
-        :chartData="salesNumberDoughnutData"
-      ></DoughnutChart>
+      <h2 class="text-3xl mt-10 text-center">Coupon vs No coupon</h2>
 
-      <h2 class="text-3xl">Sales revenue : coupon vs no coupon</h2>
-      <DoughnutChart
-        class="my-6"
-        :chartData="salesRevenueDoughnutData"
-      ></DoughnutChart>
+      <div class="grid grid-cols-1 md:grid-cols-2 text-center">
+        <div>
+          <h3 class="text-2xl my-4">Sales number</h3>
+          <DoughnutChart
+            class="my-6"
+            :chartData="salesNumberDoughnutData"
+          ></DoughnutChart>
+        </div>
+        <div>
+          <h3 class="text-2xl my-4">Sales revenue : coupon vs no coupon</h3>
+          <DoughnutChart
+            class="my-6"
+            :chartData="salesRevenueDoughnutData"
+          ></DoughnutChart>
+        </div>
+      </div>
     </div>
   </div>
 </template>
