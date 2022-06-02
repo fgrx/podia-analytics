@@ -66,7 +66,8 @@ describe(">>>>>>> useChart composable", () => {
     const results = initializeData(
       dataSample,
       dayjs("2022-05-23"),
-      dayjs("2022-05-29 23:59:59")
+      dayjs("2022-05-29 23:59:59"),
+      "week"
     );
 
     expect(results.labels.length).toBe(numberOfLabelsWanted);

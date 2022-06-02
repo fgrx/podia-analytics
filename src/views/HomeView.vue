@@ -17,13 +17,15 @@ import { buildChartBarsConfig } from "@/composables/useLineChart";
 import type { ChartData } from "chart.js";
 import { LineChart, DoughnutChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
+import type { PeriodMode } from "@/interfaces/types";
+
 Chart.register(...registerables);
 
 const csvFormInput = ref();
 const csvFile = ref<File>();
 const productsList = ref<Array<string>>();
 const targetedProducts = ref<Array<string>>([]);
-const displayMode = ref<"week" | "month">("week");
+const displayMode = ref<PeriodMode>("week");
 
 const lineChartData = ref<ChartData>();
 const salesNumberDoughnutData = ref();
@@ -133,18 +135,35 @@ const updateChartAction = () => {
 
         <input
           type="radio"
+          id="day"
+          value="day"
+          v-model="displayMode"
+          @change="updateChartAction"
+        /><label for="day" class="mr-4">Day</label>
+
+        <input
+          type="radio"
           id="week"
           value="week"
           v-model="displayMode"
           @change="updateChartAction"
         /><label for="week" class="mr-4">Week</label>
+
         <input
           type="radio"
           id="week"
           value="month"
           v-model="displayMode"
           @change="updateChartAction"
-        /><label for="month">Month</label>
+        /><label for="month" class="mr-4">Month</label>
+
+        <input
+          type="radio"
+          id="year"
+          value="year"
+          v-model="displayMode"
+          @change="updateChartAction"
+        /><label for="year" class="mr-4">Year</label>
       </div>
     </template>
 

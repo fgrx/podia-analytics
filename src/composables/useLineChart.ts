@@ -3,18 +3,15 @@ import type { ChartData } from "chart.js";
 import dayjs, { Dayjs } from "dayjs";
 
 import {
-  lastDayOfTheWeek,
-  firstDayOfTheWeek,
   updatePeriod,
-  firstDayOfMonth,
-  lastDayOfMonth,
   dateLabel,
+  dateStart,
+  dateEnd,
 } from "@/composables/useDatesFunctions";
-
-type Mode = "all" | "coupon" | "nocoupon";
+import type { CouponMode, PeriodMode } from "@/interfaces/types";
 
 interface IPurchaseNumber {
-  mode: Mode;
+  mode: CouponMode;
   nbPurchases: number;
 }
 
@@ -25,9 +22,9 @@ interface IinitializeWeeksData {
 
 export function initializeData(
   purchases: IPurchase[],
-  dateStart: Dayjs,
-  dateEnd: Dayjs,
-  displayMode: "week" | "month"
+  periodStart: Dayjs,
+  periodEnd: Dayjs,
+  displayMode: PeriodMode
 ): IinitializeWeeksData {
   const numberOfPurchases = purchases.length;
   const lastPurchase = purchases[numberOfPurchases - 1];
@@ -37,15 +34,15 @@ export function initializeData(
 
   const purchasesNumbersList: IPurchaseNumber[] = [];
 
-  while (lastDate <= dateEnd) {
-    labels.push(dateLabel(dateStart, dateEnd, displayMode));
+  while (lastDate <= periodEnd) {
+    labels.push(dateLabel(periodStart, periodEnd, displayMode));
 
-    const modes: Mode[] = ["all", "coupon", "nocoupon"];
+    const couponModes: CouponMode[] = ["all", "coupon", "nocoupon"];
 
-    modes.forEach((mode) => {
+    couponModes.forEach((mode) => {
       const nbPurchases: number = getPurchaseNumberByDate(
-        dateStart,
-        dateEnd,
+        periodStart,
+        periodEnd,
         purchases,
         mode
       );
@@ -53,9 +50,9 @@ export function initializeData(
       purchasesNumbersList.push({ mode, nbPurchases });
     });
 
-    const nextPeriod = updatePeriod(dateStart, dateEnd, displayMode);
-    dateStart = nextPeriod.dateStart;
-    dateEnd = nextPeriod.dateEnd;
+    const nextPeriod = updatePeriod(periodStart, periodEnd, displayMode);
+    periodStart = nextPeriod.dateStart;
+    periodEnd = nextPeriod.dateEnd;
   }
 
   return { labels, purchasesNumbers: purchasesNumbersList };
@@ -65,7 +62,7 @@ export function getPurchaseNumberByDate(
   dateStart: Dayjs,
   dateEnd: Dayjs,
   purchases: IPurchase[],
-  mode: Mode
+  mode: CouponMode
 ): number {
   let cptPurchases = 0;
 
@@ -94,18 +91,13 @@ export function getPurchaseNumberByDate(
 
 export function buildChartBarsConfig(
   purchases: IPurchase[],
-  displayMode: "week" | "month"
+  periodMode: PeriodMode
 ): ChartData {
-  const dateStart =
-    displayMode === "month" ? firstDayOfMonth(new Date()) : firstDayOfTheWeek();
-  const dateEnd =
-    displayMode === "month" ? lastDayOfMonth(new Date()) : lastDayOfTheWeek();
-
   const { labels, purchasesNumbers: purchasesNumbers } = initializeData(
     purchases,
-    dateStart,
-    dateEnd,
-    displayMode
+    dateStart(periodMode),
+    dateEnd(periodMode),
+    periodMode
   );
 
   const data: ChartData = {
@@ -116,20 +108,20 @@ export function buildChartBarsConfig(
         backgroundColor: "#263abd",
         borderColor: "#263abd",
 
-        data: retrievePurchasesByMode(purchasesNumbers, "all").reverse(),
+        data: retrievePurchasesByCoupon(purchasesNumbers, "all").reverse(),
       },
       {
         label: "Sales with a coupon",
         backgroundColor: "rgb(255, 99, 132)",
         borderColor: "rgb(255, 99, 132)",
-        data: retrievePurchasesByMode(purchasesNumbers, "coupon").reverse(),
+        data: retrievePurchasesByCoupon(purchasesNumbers, "coupon").reverse(),
       },
       {
         label: "Sales without coupon",
 
         backgroundColor: "#7aeb34",
         borderColor: "#7aeb34",
-        data: retrievePurchasesByMode(purchasesNumbers, "nocoupon").reverse(),
+        data: retrievePurchasesByCoupon(purchasesNumbers, "nocoupon").reverse(),
       },
     ],
   };
@@ -137,10 +129,10 @@ export function buildChartBarsConfig(
   return data;
 }
 
-const retrievePurchasesByMode = (
+const retrievePurchasesByCoupon = (
   purchasesNumbers: IPurchaseNumber[],
-  mode: Mode
+  couponMode: CouponMode
 ): number[] =>
   purchasesNumbers
-    .filter((purchases) => purchases.mode === mode)
+    .filter((purchases) => purchases.mode === couponMode)
     .map((purchases) => purchases.nbPurchases);
