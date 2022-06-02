@@ -25,7 +25,9 @@ const csvFormInput = ref();
 const csvFile = ref<File>();
 const productsList = ref<Array<string>>();
 const targetedProducts = ref<Array<string>>([]);
-const displayMode = ref<PeriodMode>("week");
+const periodMode = ref<PeriodMode>("week");
+const periodStart = ref<string>();
+const periodEnd = ref<string>();
 
 const lineChartData = ref<ChartData>();
 const salesNumberDoughnutData = ref();
@@ -88,7 +90,7 @@ const updateTargetedProductsAction = (product: string) => {
 const renderLineBar = () => {
   const dataForBarChart = buildChartBarsConfig(
     filteredProducts.value as IPurchase[],
-    displayMode.value
+    periodMode.value
   );
   lineChartData.value = dataForBarChart;
 };
@@ -106,10 +108,9 @@ const updateChartAction = () => {
       <p>
         <label>Upload a CSV File : </label
         ><input type="file" ref="csvFormInput" accept=".csv" />
-      </p>
-      <p>
+
         <input
-          class="px-4 py-2 bg-black text-white"
+          class="px-4 py-2 bg-sky-700 text-white rounded-md"
           type="submit"
           value="submit"
         />
@@ -117,53 +118,72 @@ const updateChartAction = () => {
     </form>
 
     <template v-if="productsList">
-      <div class="my-6">
-        <h2 class="text-xl">Choose products for chart rendering</h2>
-        <ul>
-          <li v-for="atelier in productsList">
+      <div class="grid grid-cols-1 md:grid-cols-2 my-6">
+        <div>
+          <h2 class="text-xl">Choose products for chart rendering</h2>
+          <ul>
+            <li v-for="atelier in productsList">
+              <input
+                type="checkbox"
+                @click="updateTargetedProductsAction(atelier)"
+              />
+              {{ atelier }}
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xl">Display mode</h3>
+
+          <input
+            type="radio"
+            id="day"
+            value="day"
+            v-model="periodMode"
+            @change="updateChartAction"
+          /><label for="day" class="mr-4">Day</label>
+
+          <input
+            type="radio"
+            id="week"
+            value="week"
+            v-model="periodMode"
+            @change="updateChartAction"
+          /><label for="week" class="mr-4">Week</label>
+
+          <input
+            type="radio"
+            id="week"
+            value="month"
+            v-model="periodMode"
+            @change="updateChartAction"
+          /><label for="month" class="mr-4">Month</label>
+
+          <input
+            type="radio"
+            id="year"
+            value="year"
+            v-model="periodMode"
+            @change="updateChartAction"
+          /><label for="year" class="mr-4">Year</label>
+
+          <div class="mt-6">
+            <h3 class="text-xl mt-6">Period</h3>
             <input
-              type="checkbox"
-              @click="updateTargetedProductsAction(atelier)"
+              type="text"
+              class="border-solid border-2 px-4 py-2 rounded-md border-sky-500"
+              v-model="periodStart"
+              placeholder="2022-01-01"
             />
-            {{ atelier }}
-          </li>
-        </ul>
-      </div>
-
-      <div class="my-6">
-        <h3 class="text-xl">Display mode</h3>
-
-        <input
-          type="radio"
-          id="day"
-          value="day"
-          v-model="displayMode"
-          @change="updateChartAction"
-        /><label for="day" class="mr-4">Day</label>
-
-        <input
-          type="radio"
-          id="week"
-          value="week"
-          v-model="displayMode"
-          @change="updateChartAction"
-        /><label for="week" class="mr-4">Week</label>
-
-        <input
-          type="radio"
-          id="week"
-          value="month"
-          v-model="displayMode"
-          @change="updateChartAction"
-        /><label for="month" class="mr-4">Month</label>
-
-        <input
-          type="radio"
-          id="year"
-          value="year"
-          v-model="displayMode"
-          @change="updateChartAction"
-        /><label for="year" class="mr-4">Year</label>
+            to
+            <input
+              type="text"
+              class="border-solid border-2 px-4 py-2 rounded-md border-sky-500"
+              v-model="periodEnd"
+              placeholder="2022-04-22"
+            />
+          </div>
+        </div>
       </div>
     </template>
 
