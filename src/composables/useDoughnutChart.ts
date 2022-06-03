@@ -9,6 +9,15 @@ import {
 import type { IPeriod } from "@/interfaces/period";
 import type { IPurchase } from "@/interfaces/purchase";
 
+const bgColors = [
+  "rgb(255, 99, 132)",
+  "#7aeb34",
+  "#e8c902",
+  "#4f9df0",
+  "#7d24e3",
+  "#f20acb",
+];
+
 const doughnutSalesNumberConfig = (purchases: IPurchase[], period: IPeriod) => {
   return {
     labels: ["Number of sales with coupon", "Number of Sales without coupon"],
@@ -19,14 +28,7 @@ const doughnutSalesNumberConfig = (purchases: IPurchase[], period: IPeriod) => {
           salesNumberWithCoupon(purchases, period),
           salesNumberWithoutCoupon(purchases, period),
         ],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "#7aeb34",
-          "#e8c902",
-          "#4f9df0",
-          "#7d24e3",
-          "#f20acb",
-        ],
+        backgroundColor: bgColors,
       },
     ],
   };
@@ -48,14 +50,7 @@ const doughnutRepartitionNumberConfig = (
         data: productsUniqueLabel(purchases).map((product) =>
           salesNumberOfAProduct(purchases, product, period)
         ),
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "#7aeb34",
-          "#e8c902",
-          "#4f9df0",
-          "#7d24e3",
-          "#f20acb",
-        ],
+        backgroundColor: bgColors,
       },
     ],
   };
@@ -72,7 +67,7 @@ const doughnutRepartitionSalesConfig = (
         data: productsUniqueLabel(purchases).map((product) =>
           salesRevenueOfAProduct(purchases, product, period)
         ),
-        backgroundColor: ["rgb(255, 99, 132)", "#7aeb34"],
+        backgroundColor: bgColors,
       },
     ],
   };
@@ -91,7 +86,7 @@ const doughnutSalesRevenueConfig = (
           salesRevenueWithCoupon(purchases, period),
           salesRevenueWithoutCoupon(purchases, period),
         ],
-        backgroundColor: ["rgb(255, 99, 132)", "#7aeb34"],
+        backgroundColor: bgColors,
       },
     ],
   };
