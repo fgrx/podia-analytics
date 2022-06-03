@@ -6,6 +6,8 @@ import {
   salesRevenue,
   salesNumberWithCoupon,
   salesRevenueWithCoupon,
+  salesRevenueOfAProduct,
+  salesNumberOfAProduct,
 } from "@/composables/useSales";
 import type { IPeriod } from "@/interfaces/period";
 import dayjs from "dayjs";
@@ -34,5 +36,19 @@ describe(">>>>> useSales composable", () => {
   it("should render revenue of sales with coupon", () => {
     const salesWanted = 498;
     expect(salesRevenueWithCoupon(dataSample, period)).toBe(salesWanted);
+  });
+
+  it("should return the numbers of products sold", () => {
+    const soldNumberWanted = 3;
+    expect(salesNumberOfAProduct(dataSample, "Atelier 1", period)).toBe(
+      soldNumberWanted
+    );
+  });
+
+  it("should return the product's revenue", () => {
+    const revenueWanted = 747;
+    expect(salesRevenueOfAProduct(dataSample, "Atelier 1", period)).toBe(
+      revenueWanted
+    );
   });
 });

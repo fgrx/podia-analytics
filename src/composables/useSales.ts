@@ -56,6 +56,33 @@ const salesNumberWithoutCoupon = (purchases: IPurchase[], period: IPeriod) =>
     )
     .filter((purchase) => !purchase.coupon).length;
 
+const salesNumberOfAProduct = (
+  purchases: IPurchase[],
+  productName: string,
+  period: IPeriod
+): number =>
+  purchases
+    .filter(
+      (purchase) =>
+        dayjs(purchase.date).isBefore(period.end) &&
+        dayjs(purchase.date).isAfter(period.start)
+    )
+    .filter((purchase) => purchase.summary === productName).length;
+
+const salesRevenueOfAProduct = (
+  purchases: IPurchase[],
+  productName: string,
+  period: IPeriod
+): number =>
+  purchases
+    .filter(
+      (purchase) =>
+        dayjs(purchase.date).isBefore(period.end) &&
+        dayjs(purchase.date).isAfter(period.start)
+    )
+    .filter((purchase) => purchase.summary === productName)
+    .reduce((acc, purchase) => +purchase.revenue.trim() + acc, 0);
+
 export {
   allSalesNumber,
   salesRevenue,
@@ -63,4 +90,6 @@ export {
   salesRevenueWithCoupon,
   salesRevenueWithoutCoupon,
   salesNumberWithoutCoupon,
+  salesNumberOfAProduct,
+  salesRevenueOfAProduct,
 };
