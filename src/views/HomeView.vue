@@ -21,6 +21,7 @@ import { LineChart, DoughnutChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
 import type { PeriodMode } from "@/interfaces/types";
 import type { IPeriod } from "@/interfaces/period";
+import { optimizePurchases } from "@/composables/useOptimizeData";
 import dayjs from "dayjs";
 
 Chart.register(...registerables);
@@ -72,8 +73,9 @@ const parseFile = (csvFile: File) => {
       const datas = results.data;
       if (Array.isArray(datas)) {
         const purchases = datas.map(convertToPurchase);
-        allPurchases.value = purchases;
-        productsList.value = findProductsNames(purchases);
+        const optimizedPurchases = optimizePurchases(purchases);
+        allPurchases.value = optimizedPurchases;
+        productsList.value = findProductsNames(optimizedPurchases);
       }
     },
   });
